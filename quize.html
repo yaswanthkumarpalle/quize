@@ -391,418 +391,65 @@
         ];
 
         const quizQuestions = [
-            {
-                category: "Python Variables",
-                question: "Fill in the blank to assign an integer value of 10 to variable 'x'.",
-                snippet: "x = ___",
-                correctAnswers: ["10"],
-                options: ["'10'", "10", "int(10)", "val(10)"],
-                explanation: "Direct numeric assignment assigns an integer directly without quotes."
-            },
-            {
-                category: "Python Data Types",
-                question: "Which sequence data type in Python is IMMUTABLE?",
-                snippet: "my_data = (1, 2, 3)  # Is it List or Tuple?",
-                correctAnswers: ["tuple"],
-                options: ["list", "dict", "set", "tuple"],
-                explanation: "Tuples are immutable ordered sequences created using parentheses."
-            },
-            {
-                category: "Python Data Types",
-                question: "What is the output data type of `type(3.14)` in Python?",
-                snippet: "print(type(3.14))",
-                correctAnswers: ["float", "<class 'float'>"],
-                options: ["double", "float", "int", "decimal"],
-                explanation: "Floating point numbers belong to class 'float'."
-            },
-            {
-                category: "Python Operators",
-                question: "Fill in the operator for integer division (floor division) in Python.",
-                snippet: "result = 7 ___ 2  # Output will be 3",
-                correctAnswers: ["//"],
-                options: ["/", "%", "//", "**"],
-                explanation: "The double slash `//` performs floor division in Python."
-            },
-            {
-                category: "Python Operators",
-                question: "Fill in the exponentiation (power) operator in Python.",
-                snippet: "two_cubed = 2 ___ 3  # Output will be 8",
-                correctAnswers: ["**"],
-                options: ["^", "pow", "*", "**"],
-                explanation: "The `**` operator raises a number to the given exponent."
-            },
-
-            // --- PYTHON CONDITIONALS & LOOPS ---
-            {
-                category: "Python Conditionals",
-                question: "Which keyword is used for 'else if' conditions in Python?",
-                snippet: "if x > 10:\n    pass\n___ x == 5:\n    pass",
-                correctAnswers: ["elif"],
-                options: ["else if", "elif", "elseif", "if else"],
-                explanation: "Python uses 'elif' as a shorthand for 'else if'."
-            },
-            {
-                category: "Python Loops",
-                question: "Fill in the loop keyword to iterate through items in a list.",
-                snippet: "___ item in my_list:\n    print(item)",
-                correctAnswers: ["for"],
-                options: ["while", "foreach", "for", "loop"],
-                explanation: "The 'for' loop iterates over elements of any sequence."
-            },
-            {
-                category: "Python Loops",
-                question: "Which statement is used to immediately exit/terminate a loop?",
-                snippet: "while True:\n    ___  # Exit immediately",
-                correctAnswers: ["break"],
-                options: ["stop", "break", "exit", "return"],
-                explanation: "The 'break' statement terminates the current loop loop execution."
-            },
-            {
-                category: "Python Loops",
-                question: "Which statement skips the rest of the current loop iteration and moves to the next?",
-                snippet: "for i in range(5):\n    if i == 2: ___\n    print(i)",
-                correctAnswers: ["continue"],
-                options: ["skip", "pass", "next", "continue"],
-                explanation: "The 'continue' statement skips the remaining loop code for the current iteration."
-            },
-
-            // --- PYTHON LISTS & STRINGS ---
-            {
-                category: "Python Lists",
-                question: "What method adds a single element to the end of a Python list?",
-                snippet: "my_list = [1, 2]\nmy_list.___(3)",
-                correctAnswers: ["append"],
-                options: ["append", "push", "add", "insert"],
-                explanation: "The `append()` method appends an item to the end of a list."
-            },
-            {
-                category: "Python Lists",
-                question: "Fill in the index to access the LAST element of a list using negative indexing.",
-                snippet: "last_element = my_list[___]",
-                correctAnswers: ["-1"],
-                options: ["-1", "-2", "0", "end"],
-                explanation: "Index `-1` refers to the last element in Python sequences."
-            },
-            {
-                category: "Python Strings",
-                question: "Fill in the function to get the length/number of characters in a string.",
-                snippet: "msg = 'Hello'\nsize = ___(msg)",
-                correctAnswers: ["len"],
-                options: ["len", "length", "size", "count"],
-                explanation: "The built-in `len()` function returns sequence length."
-            },
-            {
-                category: "Python Strings",
-                question: "What method converts all characters of a string to uppercase?",
-                snippet: "text = 'hello'\nprint(text.___())",
-                correctAnswers: ["upper"],
-                options: ["upper", "uppercase", "toUpper", "capitalize"],
-                explanation: "`upper()` returns a copy of string converted to uppercase."
-            },
-
-            // --- PYTHON FUNCTIONS ---
-            {
-                category: "Python Functions",
-                question: "Which keyword is used to send back a value from a function?",
-                snippet: "def add(a, b):\n    ___ a + b",
-                correctAnswers: ["return"],
-                options: ["return", "yield", "send", "give"],
-                explanation: "The `return` statement exits a function and passes back a result."
-            },
-            {
-                category: "Python Functions",
-                question: "What keyword creates an anonymous inline single-expression function?",
-                snippet: "square = ___ x: x * x",
-                correctAnswers: ["lambda"],
-                options: ["lambda", "inline", "anon", "def"],
-                explanation: "Anonymous functions in Python are created using the `lambda` keyword."
-            },
-
-            // --- C SYNTAX & VARIABLES ---
-            {
-                category: "C Basics",
-                question: "Every C program execution starts from which mandatory main function?",
-                snippet: "___ main() {\n    return 0;\n}",
-                correctAnswers: ["int", "void"],
-                options: ["int", "void", "main", "float"],
-                explanation: "Standard C programs start execution inside `int main()`."
-            },
-            {
-                category: "C Syntax",
-                question: "What punctuation mark MUST terminate almost every standard C statement?",
-                snippet: "int x = 10___",
-                correctAnswers: [";", "semicolon"],
-                options: [";", ":", ".", ","],
-                explanation: "In C, semicolons `;` serve as statement terminators."
-            },
-            {
-                category: "C Variables",
-                question: "Which data type is used to store single characters in C?",
-                snippet: "___ letter = 'A';",
-                correctAnswers: ["char"],
-                options: ["char", "String", "str", "character"],
-                explanation: "`char` allocates memory for storing single ASCII characters."
-            },
-            {
-                category: "C Variables",
-                question: "Fill in the keyword used to define unmodifiable constant variables in C.",
-                snippet: "___ float PI = 3.14159;",
-                correctAnswers: ["const"],
-                options: ["const", "final", "static", "define"],
-                explanation: "`const` turns a variable declaration into a read-only constant."
-            },
-
-            // --- C INPUT AND OUTPUT ---
-            {
-                category: "C Input/Output",
-                question: "Which standard header file is required for printf() and scanf() in C?",
-                snippet: "#include <___>",
-                correctAnswers: ["stdio.h", "stdio"],
-                options: ["stdio.h", "stdlib.h", "conio.h", "iostream"],
-                explanation: "`stdio.h` contains declarations for standard I/O library functions."
-            },
-            {
-                category: "C Input/Output",
-                question: "Fill in the format specifier for printing integers in C printf().",
-                snippet: "int age = 20;\nprintf('Age is: %___', age);",
-                correctAnswers: ["d", "i", "%d"],
-                options: ["d", "f", "s", "c"],
-                explanation: "`%d` (or `%i`) formats signed integer variables."
-            },
-            {
-                category: "C Input/Output",
-                question: "Fill in the format specifier for floating-point numbers in C.",
-                snippet: "float price = 99.5;\nprintf('%___', price);",
-                correctAnswers: ["f", "%f"],
-                options: ["f", "d", "lf", "s"],
-                explanation: "`%f` formats float numbers in C."
-            },
-            {
-                category: "C Input/Output",
-                question: "Which operator is placed before a variable name in `scanf()` to pass its memory address?",
-                snippet: "int val;\nscanf('%d', ___val);",
-                correctAnswers: ["&"],
-                options: ["&", "*", "%", "#"],
-                explanation: "The address-of operator `&` passes the memory location to `scanf()`."
-            },
-
-            // --- C ARRAYS & POINTERS ---
-            {
-                category: "C Arrays",
-                question: "What is the index of the FIRST element in any C array?",
-                snippet: "int arr[5] = {10, 20, 30, 40, 50};\nint first = arr[___];",
-                correctAnswers: ["0"],
-                options: ["0", "1", "-1", "first"],
-                explanation: "C arrays are 0-indexed; the initial element is at index 0."
-            },
-            {
-                category: "C Arrays",
-                question: "If an array is declared as `int arr[10]`, what is the valid maximum index?",
-                snippet: "int arr[10]; // Max valid index is ___",
-                correctAnswers: ["9"],
-                options: ["9", "10", "11", "8"],
-                explanation: "An array of size N has valid indices from 0 to N-1 (0 to 9)."
-            },
-            {
-                category: "C Pointers",
-                question: "Which symbol is used to declare a pointer variable in C?",
-                snippet: "int ___ptr;  // Pointer to int",
-                correctAnswers: ["*"],
-                options: ["*", "&", "->", "ptr"],
-                explanation: "The asterisk `*` designates a pointer declaration and dereference."
-            },
-            {
-                category: "C Pointers",
-                question: "What value does an uninitialized pointer holding address 0 (or NULL) represent?",
-                snippet: "int *ptr = ___;",
-                correctAnswers: ["NULL", "0", "null"],
-                options: ["NULL", "VOID", "EMPTY", "NIL"],
-                explanation: "`NULL` represents a null pointer pointing to no valid memory."
-            },
-            {
-                category: "C Pointers",
-                question: "Which operator is used to access the memory address of a variable?",
-                snippet: "int x = 5;\nprintf('%p', ___x);",
-                correctAnswers: ["&"],
-                options: ["&", "*", "->", "%"],
-                explanation: "`&` is the address-of operator returning the location of a variable."
-            },
-            {
-                category: "C Pointers",
-                question: "Accessing value stored at a pointer address using `*ptr` is called _____ referencing.",
-                snippet: "int val = *ptr;  // __referencing",
-                correctAnswers: ["de", "dereferencing", "dereference"],
-                options: ["dereferencing", "referencing", "indexing", "addressing"],
-                explanation: "Using `*ptr` to retrieve the stored data is called dereferencing."
-            },
-
-            // --- BASIC PROGRAMMING CONCEPTS ---
-            {
-                category: "Basic Concepts",
-                question: "What do we call a step-by-step well-defined set of rules to solve a problem?",
-                snippet: "Problem -> [ ? ] -> Working Solution",
-                correctAnswers: ["algorithm"],
-                options: ["algorithm", "flowchart", "compiler", "syntax"],
-                explanation: "An algorithm is a finite sequence of rigorous instructions."
-            },
-            {
-                category: "Basic Concepts",
-                question: "Which tool translates high-level C code into machine executable binary code?",
-                snippet: "source.c  ---> [ ? ] ---> executable.exe",
-                correctAnswers: ["compiler"],
-                options: ["compiler", "interpreter", "linker", "editor"],
-                explanation: "A compiler translates C source code into machine binary code."
-            },
-            {
-                category: "Basic Concepts",
-                question: "What term describes errors in code syntax that prevent compilation?",
-                snippet: "printf('Missing semicolon')",
-                correctAnswers: ["syntax error", "syntax", "compile error"],
-                options: ["syntax error", "runtime error", "logical error", "segmentation fault"],
-                explanation: "Syntax errors occur when code violates grammar rules of the language."
-            },
-            {
-                category: "Basic Concepts",
-                question: "A loop that never terminates because its test condition remains always true is an _____ loop.",
-                snippet: "while(1) { /* Forever */ }",
-                correctAnswers: ["infinite"],
-                options: ["infinite", "endless", "overflow", "recursive"],
-                explanation: "Infinite loops run perpetually unless interrupted by system/user."
-            },
-
-            // --- MORE PYTHON & C MIXED ---
-            {
-                category: "Python Lists",
-                question: "Which Python method removes and returns an element at a given index (or last item)?",
-                snippet: "my_list = [10, 20, 30]\nval = my_list.___()",
-                correctAnswers: ["pop"],
-                options: ["pop", "remove", "delete", "clear"],
-                explanation: "`pop()` removes and returns an element at specified position."
-            },
-            {
-                category: "Python Basics",
-                question: "Which built-in function takes user keyboard input as a string in Python?",
-                snippet: "name = ___('Enter your name: ')",
-                correctAnswers: ["input"],
-                options: ["input", "read", "scan", "gets"],
-                explanation: "`input()` reads a line from input and returns it as a string."
-            },
-            {
-                category: "C Strings",
-                question: "In C, character strings are terminated by which special null character?",
-                snippet: "char str[] = {'H', 'i', '___'};",
-                correctAnswers: ["\\0", "0", "null"],
-                options: ["\\0", "\\n", "NULL", "EOF"],
-                explanation: "C strings are null-terminated with the null character `\\0`."
-            },
-            {
-                category: "C Memory",
-                question: "Which dynamic memory allocation function in `<stdlib.h>` allocates raw bytes?",
-                snippet: "int *ptr = (int*) ___(10 * sizeof(int));",
-                correctAnswers: ["malloc"],
-                options: ["malloc", "calloc", "realloc", "alloc"],
-                explanation: "`malloc()` allocates specified number of uninitialized bytes."
-            },
-            {
-                category: "C Memory",
-                question: "Which function MUST be called to release dynamically allocated memory in C?",
-                snippet: "free(ptr);  // Function name is ___",
-                correctAnswers: ["free"],
-                options: ["free", "delete", "dealloc", "release"],
-                explanation: "`free()` releases allocated heap memory back to the system."
-            },
-            {
-                category: "Python Dictionaries",
-                question: "Python dictionaries store data in Key-___ pairs.",
-                snippet: "student = {'id': 101, 'name': 'Raju'}",
-                correctAnswers: ["value", "values"],
-                options: ["value", "pair", "item", "data"],
-                explanation: "Dictionaries store mappings as Key-Value pairs."
-            },
-
-            // --- FUNNY BONUS STUDENT & BUG QUESTIONS ---
-            {
-                category: "Funny Bonus!",
-                question: "What missing single symbol causes 90% of BTech 2nd-year C programming panics?",
-                snippet: "int x = 50 // Oops, forgot something at the end!",
-                correctAnswers: [";", "semicolon"],
-                options: [";", "comment", "brace", "quote"],
-                explanation: "The infamous missing semicolon `;` strikes every C coder!"
-            },
-            {
-                category: "Funny Bonus!",
-                question: "What liquid fuel converts BTech student late-night code into working software?",
-                snippet: "while(debugging) { drink(___); }",
-                correctAnswers: ["coffee", "tea", "chai"],
-                options: ["coffee", "chai", "water", "redbull"],
-                explanation: "Coffee and Chai fuel 2 AM debugging sessions globally!"
-            },
-            {
-                category: "Funny Bonus!",
-                question: "What creature made history as the very first physical bug found inside a computer relay in 1947?",
-                snippet: "Found inside Harvard Mark II computer: A real ___!",
-                correctAnswers: ["moth", "bug", "insect"],
-                options: ["moth", "beetle", "spider", "mosquito"],
-                explanation: "Grace Hopper's team found an actual moth trapped in a relay in 1947!"
-            },
-            {
-                category: "Funny Bonus!",
-                question: "Famous programmer quote: 'It's not a bug, it's an undocumented ___!'",
-                snippet: "Dev response to client: It's a ___!",
-                correctAnswers: ["feature"],
-                options: ["feature", "secret", "shortcut", "design"],
-                explanation: "The classic developer phrase: 'It's not a bug, it's a feature!'"
-            },
-            {
-                category: "Python Advanced",
-                question: "What keyword is used in Python to handle exceptions inside a try block?",
-                snippet: "try:\n    res = 10 / 0\n___ ZeroDivisionError:\n    print('Err')",
-                correctAnswers: ["except"],
-                options: ["except", "catch", "finally", "error"],
-                explanation: "Python uses `except` to catch exceptions thrown inside `try` blocks."
-            },
-            {
-                category: "C Operators",
-                question: "Which ternary operator symbol follows the boolean condition?",
-                snippet: "int max = (a > b) ___ a : b;",
-                correctAnswers: ["?"],
-                options: ["?", ":", "if", "then"],
-                explanation: "The ternary conditional operator uses `? :` syntax."
-            },
-            {
-                category: "C Functions",
-                question: "What keyword specifies that a function does NOT return any value?",
-                snippet: "___ printMessage() {\n    printf('Hello');\n}",
-                correctAnswers: ["void"],
-                options: ["void", "null", "empty", "none"],
-                explanation: "`void` specifies that a function returns no value."
-            },
-            {
-                category: "Python Modules",
-                question: "Which keyword is used to load an external library or module in Python?",
-                snippet: "___ math\nprint(math.sqrt(16))",
-                correctAnswers: ["import"],
-                options: ["import", "include", "use", "require"],
-                explanation: "`import` loads external modules into Python programs."
-            },
-            {
-                category: "C Structures",
-                question: "Which C keyword is used to define a custom user-defined composite data type?",
-                snippet: "___ Student {\n    int id;\n    char name[50];\n};",
-                correctAnswers: ["struct"],
-                options: ["struct", "typedef", "class", "union"],
-                explanation: "`struct` bundles multiple related variables of different types together."
-            },
-            {
-                category: "Final Boss Question",
-                question: "What command in Python prints text onto the terminal screen?",
-                snippet: "___('Congratulations Champion!')",
-                correctAnswers: ["print"],
-                options: ["print", "printf", "cout", "echo"],
-                explanation: "`print()` outputs formatted text to standard output in Python."
-            }
-        ];
-
+            ["Which function is the starting point of a standard C program?", "int ___(void) { return 0; }", "main", "start|main|begin|program", "Execution begins in main()."],
+            ["Which header declares printf() and scanf()?", "#include <___>", "stdio.h", "stdio.h|stdlib.h|string.h|math.h", "Standard input/output functions are declared in stdio.h."],
+            ["Which character ends most C statements?", "int count = 5___", ";", ";|:|.|,", "Most C statements end with a semicolon."],
+            ["Which type stores a whole number?", "___ age = 20;", "int", "int|char|void|float", "int is a basic integer type."],
+            ["Which type stores one character?", "___ grade = 'A';", "char", "char|string|text|character", "char stores a single character value."],
+            ["Which basic type stores a decimal value?", "___ temperature = 36.5f;", "float", "float|int|char|void", "float represents a floating-point value."],
+            ["Which keyword declares a read-only variable?", "___ int limit = 100;", "const", "const|fixed|final|static", "const prevents modification through that identifier."],
+            ["Which printf format specifier prints an int?", "printf(\"%___\", number);", "d", "d|f|c|s", "%d formats an int with printf."],
+            ["Which scanf format specifier reads an int?", "scanf(\"%___\", &number);", "d", "d|f|c|s", "%d reads an int with scanf."],
+            ["Which printf format specifier prints a float?", "printf(\"%___\", value);", "f", "f|d|c|s", "%f formats a floating-point value with printf."],
+            ["Which operator gets a variable's address?", "scanf(\"%d\", ___number);", "&", "&|*|%|#", "& is the address-of operator."],
+            ["Which operator assigns a value?", "int total ___ 0;", "=", "=|==|:=|->", "A single equals sign assigns a value."],
+            ["Which operator checks equality?", "if (a ___ b)", "==", "==|=|!=|>=", "== compares two values for equality."],
+            ["Which operator means logical AND?", "if (ready ___ valid)", "&&", "&&|||&|!", "&& is the logical AND operator."],
+            ["Which operator means logical OR?", "if (left ___ right)", "||", "|||&&|||!", "|| is the logical OR operator."],
+            ["Which operator gives an integer remainder?", "int remainder = 10 ___ 3;", "%", "%|/|*|+", "% gives the remainder after integer division."],
+            ["Which keyword begins a conditional?", "___ (score >= 50) { pass = 1; }", "if", "if|when|check|case", "if runs a block when its condition is true."],
+            ["Which keyword provides an alternative branch to if?", "if (x > 0) { } ___ { }", "else", "else|otherwise|elif|default", "else handles the alternative when the if condition is false."],
+            ["Which statement selects among multiple cases?", "___ (choice) { case 1: break; }", "switch", "switch|select|ifcase|choose", "switch branches to a matching case label."],
+            ["Which keyword exits a loop immediately?", "while (1) { if (done) ___; }", "break", "break|stop|exit|continue", "break exits the nearest loop or switch."],
+            ["Which keyword skips to the next loop iteration?", "if (skip) ___;", "continue", "continue|break|next|pass", "continue skips the remaining body of the current iteration."],
+            ["Which loop checks its condition before each iteration?", "___ (count < 5) { count++; }", "while", "while|do|repeat|until", "while checks the condition before running the body."],
+            ["Which loop header groups initialization, condition, and update?", "___ (int i = 0; i < 5; i++) { }", "for", "for|while|switch|if", "A for loop groups its three control expressions."],
+            ["Which loop always runs its body at least once?", "___ { count++; } while (count < 3);", "do", "do|for|while|if", "do-while tests its condition after running the body."],
+            ["What is the index of the first C array element?", "int values[3]; values[___] = 10;", "0", "0|1|-1|3", "C arrays use zero-based indexing."],
+            ["What is the last valid index of an array with 5 elements?", "int values[5]; // last index: ___", "4", "4|5|3|6", "An array of length N has indices from 0 through N-1."],
+            ["Which keyword sends a value back from a function?", "int square(int n) { ___ n * n; }", "return", "return|give|break|yield", "return ends a function and supplies its result."],
+            ["Which return type means a function returns no value?", "___ showMessage(void) { puts(\"Hi\"); }", "void", "void|null|empty|none", "void as a return type means no return value."],
+            ["What is a function prototype?", "int add(int, int); // function ___", "prototype", "prototype|loop|expression|comment", "A prototype declares a function's name, return type, and parameters."],
+            ["Which keyword defines a structure type?", "___ Point { int x; int y; };", "struct", "struct|class|record|object", "struct groups related members into a single type."],
+            ["Which keyword defines an enumeration?", "___ Day { MON, TUE };", "enum", "enum|define|struct|case", "enum defines named integer constants."],
+            ["What is the null character in a C string?", "char end = '___';", "\\0", "\\0|\\n|NULL|EOF", "C strings end with the null character, written \\0."],
+            ["Which header declares strlen()?", "#include <___>", "string.h", "string.h|stdio.h|strings|stdlib.h", "string.h declares standard string functions."],
+            ["Which function returns a C string's length?", "size_t n = ___(text);", "strlen", "strlen|sizeof|strsize|length", "strlen counts characters before the terminating null character."],
+            ["Which function compares two C strings?", "if (___(first, second) == 0) { }", "strcmp", "strcmp|strcpy|strlen|strcat", "strcmp compares two null-terminated strings."],
+            ["Which symbol declares a pointer to int?", "int ___ptr;", "*", "*|&|->|%", "The * in a declaration indicates a pointer type."],
+            ["Which operator accesses the value pointed to by ptr?", "int value = ___ptr;", "*", "*|&|->|.", "Unary * dereferences a pointer."],
+            ["Which operator accesses a structure member through a pointer?", "studentPtr___age", "->", "->|.|*|&", "-> accesses a member through a structure pointer."],
+            ["What value represents a pointer that points to no object?", "int *ptr = ___;", "NULL", "NULL|VOID|EMPTY|EOF", "NULL is used to represent a null pointer."],
+            ["Which header declares malloc() and free()?", "#include <___>", "stdlib.h", "stdlib.h|stdio.h|string.h|memory.h", "Standard memory allocation functions are declared in stdlib.h."],
+            ["Which function allocates dynamic memory?", "int *p = ___(5 * sizeof(int));", "malloc", "malloc|create|alloc|new", "malloc allocates a requested number of bytes."],
+            ["Which function releases dynamically allocated memory?", "___(ptr);", "free", "free|delete|remove|clear", "free releases dynamically allocated memory."],
+            ["Which preprocessor directive includes a header?", "___ <stdio.h>", "#include", "#include|import|using|package", "#include tells the preprocessor to include a header."],
+            ["Which symbols begin a single-line C comment?", "___ This is a comment", "//", "//|#|--|\\", "Two forward slashes begin a single-line comment."],
+            ["Which pair of symbols encloses a C code block?", "int main(void) ___ return 0; ___", "{}", "{}|[]|()|<>", "Curly braces delimit compound statements and function bodies."],
+            ["Which escape sequence starts a new line in a string?", "printf(\"Hello___World\");", "\\n", "\\n|\\t|\\0|\\r", "\\n is the newline escape sequence."],
+            ["What unit does sizeof report?", "sizeof(int) gives the size in ___", "bytes", "bytes|bits|characters|digits", "sizeof reports a size in bytes."],
+            ["Which operator increments a variable by one?", "count___;", "++", "++|+|+=|**", "++ increments its operand by one."],
+            ["Which symbol begins the conditional operator?", "max = (a > b) ___ a : b;", "?", "?|:|??|if", "The conditional operator has the form condition ? value1 : value2."],
+            ["Which keyword ends a switch case to prevent fall-through?", "case 1: action(); ___;", "break", "break|stop|returncase|exit", "break exits the switch after the selected case."],
+            ["Which keyword gives a name to a type alias?", "___ unsigned int uint;", "typedef", "typedef|define|alias|using", "typedef creates an alias for an existing type." ]
+        ].map(([question, snippet, answer, choices, explanation]) => ({
+            category: "C Basics",
+            question,
+            snippet,
+            correctAnswers: [answer],
+            options: choices.split("|"),
+            explanation
+        }));
         let currentQuestionIdx = 0;
         let score = 0;
         let userAnswers = new Array(quizQuestions.length).fill("");
