@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: quize
+    runtime: static
+    buildCommand: mkdir -p dist && cp quize.html dist/index.html
+    staticPublishPath: ./dist
