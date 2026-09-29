@@ -440,14 +440,14 @@
             ["What unit does sizeof report?", "sizeof(int) gives the size in ___", "bytes", "bytes|bits|characters|digits", "sizeof reports a size in bytes."],
             ["Which operator increments a variable by one?", "count___;", "++", "++|+|+=|**", "++ increments its operand by one."],
             ["Which symbol begins the conditional operator?", "max = (a > b) ___ a : b;", "?", "?|:|??|if", "The conditional operator has the form condition ? value1 : value2."],
-            ["Which keyword ends a switch case to prevent fall-through?", "case 1: action(); ___;", "break", "break|stop|returncase|exit", "break exits the switch after the selected case."],
-            ["Which keyword gives a name to a type alias?", "___ unsigned int uint;", "typedef", "typedef|define|alias|using", "typedef creates an alias for an existing type." ]
+            ["Which keyword ends a switch case to prevent fall-through?", "case 1: action(); ___;", "break", "break|stop|returncase|exit", "break exits the switch after the selected case."]
         ].map(([question, snippet, answer, choices, explanation]) => ({
             category: "C Basics",
             question,
             snippet,
             correctAnswers: [answer],
-            options: choices.split("|"),
+            options: question.includes("logical AND") ? ["&&", "||", "&", "!"] :
+                question.includes("logical OR") ? ["||", "&&", "|", "!"] : choices.split("|"),
             explanation
         }));
         let currentQuestionIdx = 0;
