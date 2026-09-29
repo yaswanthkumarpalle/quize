@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C Basics Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Guntur:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        telugu: ['"Hind Guntur"', 'sans-serif'],
+                        mono: ['"Fira Code"', 'monospace']
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', 'Hind Guntur', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .telugu-text {
+            font-family: 'Hind Guntur', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.5);
+            border-radius: 4px;
+        }
+        
+        /* Motion control overrides */
+        body.reduce-motion *, 
+        body.reduce-motion *::before, 
+        body.reduce-motion *::after {
+            animation: none !important;
+            transition: none !important;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.85) translateY(15px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        .animate-pop-in {
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes floatMascot {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+        }
+        .animate-float {
+            animation: floatMascot 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen text-slate-100 antialiased selection:bg-indigo-500 selection:text-white">
+
+    <header class="w-full glass-card sticky top-0 z-30 border-b border-slate-700/50 px-4 py-3 sm:px-8">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-400 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 font-bold text-xl">
+                    <i class="fa-solid fa-code"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-amber-300 via-pink-400 to-indigo-300">
+                        Pro-Code BTech Championship
+                    </h1>
+                    <p class="text-xs text-slate-400 telugu-text">కోడింగ్ క్విజ్ కాంటెస్ట్ - 50 ప్రశ్నలు</p>
+                </div>
+            </div>
+
+            <!-- Controls & Dialogue Trigger -->
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <button onclick="toggleMotion()" id="motionBtn" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 border border-slate-700 transition">
+                    <i class="fa-solid fa-person-running text-amber-400" id="motionIcon"></i>
+                    <span class="hidden md:inline">Reduce Motion</span>
+                </button>
+
+                <button onclick="openDialoguesModal()" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white text-xs font-bold shadow-lg shadow-pink-500/20 flex items-center gap-1.5 transition transform active:scale-95">
+                    <i class="fa-solid fa-masks-theater text-amber-300"></i>
+                    <span>50 Punch Dialogues</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col justify-center">
+        
+        <!-- Progress Bar & Category Header -->
+        <div id="quizHeaderBar" class="mb-6 flex flex-wrap items-center justify-between gap-3 glass-card p-4 rounded-2xl">
+            <div class="flex items-center gap-3">
+                <span class="px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30" id="questionCategory">
+                    Category
+                </span>
+                <span class="text-xs font-semibold text-slate-400">Question <span id="currentQNum" class="text-white font-bold">1</span> of <span id="totalQNum">50</span></span>
+            </div>
+
+            <div class="flex items-center gap-6">
+                <!-- Score Counter -->
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-trophy text-amber-400 text-sm"></i>
+                    <span class="text-xs font-semibold text-slate-400">Score:</span>
+                    <span id="scoreDisplay" class="text-lg font-black text-amber-400">0</span>
+                </div>
+                <!-- Answered Indicator -->
+                <div class="flex items-center gap-2 bg-slate-900/80 px-3 py-1 rounded-full border border-slate-700">
+                    <i class="fa-solid fa-list-check text-emerald-400 text-xs"></i>
+                    <span id="answeredDisplay" class="text-xs font-mono font-bold text-emerald-300">0/50</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Question Card Container -->
+        <div id="quizCard" class="glass-card rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden transition-all duration-300">
+            <!-- Question Content -->
+            <div class="mb-6">
+                <div class="flex items-center justify-between mb-2">
+                    <span id="questionTypeBadge" class="text-[10px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                        Fill-in-the-Blank / Coding Quiz
+                    </span>
+                    <span id="saveStatusIndicator" class="text-xs text-slate-400 italic">
+                        <i class="fa-regular fa-floppy-disk text-indigo-400 mr-1"></i> Auto-saved
+                    </span>
+                </div>
+                <h2 id="questionText" class="text-lg sm:text-2xl font-bold text-white leading-relaxed">
+                    Loading Question...
+                </h2>
+                
+                <!-- Code Snippet Box -->
+                <div id="codeSnippet" class="hidden my-4 p-4 rounded-xl bg-slate-950 border border-slate-800 font-mono text-sm text-emerald-400 overflow-x-auto leading-relaxed">
+                </div>
+            </div>
+
+            <!-- Answer Section: Fill-in-the-Blank Text Input & Options -->
+            <div class="mb-8 space-y-4">
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-400">Your Answer / Code Completion:</label>
+                
+                <!-- Fill in blank input -->
+                <div class="relative">
+                    <input type="text" id="blankInput" placeholder="Type your answer here (e.g., int, print, break)..." 
+                        oninput="onUserInputChange(this.value)"
+                        onkeydown="if(event.key==='Enter') checkSelectedAnswer()"
+                        class="w-full px-4 py-3.5 rounded-2xl bg-slate-950 border-2 border-indigo-500/50 focus:border-indigo-400 focus:outline-none font-mono text-emerald-300 text-base shadow-inner placeholder-slate-600 transition" />
+                </div>
+
+                <!-- Multiple choice / Suggestion chips grid -->
+                <div id="optionsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                    <!-- Dynamic Suggestion Chips rendered here -->
+                </div>
+            </div>
+
+            <!-- Action Buttons Footer -->
+            <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-slate-800">
+                <button id="prevBtn" onclick="prevQuestion()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-semibold flex items-center gap-2 border border-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition">
+                    <i class="fa-solid fa-arrow-left"></i> Previous
+                </button>
+
+                <div class="flex items-center gap-3">
+                    <button id="checkBtn" onclick="checkSelectedAnswer()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 text-sm font-black shadow-lg shadow-orange-500/20 flex items-center gap-2 transition transform active:scale-95">
+                        <i class="fa-solid fa-circle-check"></i> Check Answer
+                    </button>
+                    <button id="nextBtn" onclick="nextQuestion()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white text-sm font-bold shadow-lg shadow-indigo-500/25 flex items-center gap-2 transition transform active:scale-95">
+                        Next <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="summaryCard" class="hidden glass-card rounded-3xl p-6 sm:p-10 shadow-2xl text-center space-y-6">
+            <div class="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-tr from-amber-400 to-indigo-600 flex items-center justify-center text-4xl text-white shadow-xl shadow-indigo-500/30">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+            
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Quiz Completed!</h2>
+            <p class="text-slate-300 telugu-text text-lg">మొత్తం క్విజ్ పూర్తయింది! మీ ప్రదర్శన వివరాలు ఇక్కడ ఉన్నాయి:</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-6">
+                <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+                    <span class="block text-xs font-bold text-slate-400 uppercase">Total Score</span>
+                    <span id="finalScore" class="text-3xl font-black text-amber-400">0 / 500</span>
+                </div>
+                <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+                    <span class="block text-xs font-bold text-slate-400 uppercase">Percentage</span>
+                    <span id="finalPercentage" class="text-3xl font-black text-indigo-400">0%</span>
+                </div>
+                <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+                    <span class="block text-xs font-bold text-slate-400 uppercase">Questions Attempted</span>
+                    <span id="finalAttempted" class="text-3xl font-black text-emerald-400">0 / 50</span>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-4 pt-4">
+                <button onclick="resetQuiz()" class="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-sm border border-slate-700 transition flex items-center gap-2">
+                    <i class="fa-solid fa-rotate-right"></i> Reset Quiz
+                </button>
+                <button onclick="toggleAnswerKey()" class="px-8 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-indigo-600 hover:from-amber-400 hover:to-indigo-500 text-slate-950 font-black text-sm uppercase tracking-wider shadow-lg transition flex items-center gap-2">
+                    <i class="fa-solid fa-key"></i> Reveal Answer Key
+                </button>
+            </div>
+
+            <!-- Answer Key Accordion Box -->
+            <div id="answerKeyBox" class="hidden text-left mt-8 pt-6 border-t border-slate-800 space-y-4">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-book-open text-amber-400"></i> Complete Answer Key & Explanations
+                </h3>
+                <div id="answerKeyList" class="space-y-3 max-h-[500px] overflow-y-auto custom-scrollbar pr-2">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Telugu Reaction Modal Popup -->
+    <div id="commentaryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md hidden transition-opacity duration-300">
+        <div id="commentaryCard" class="w-full max-w-lg glass-card rounded-3xl p-6 sm:p-8 border-2 shadow-2xl relative animate-pop-in">
+            
+            <!-- Close Button -->
+            <button onclick="closeCommentaryModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- Status Indicator Header -->
+            <div class="flex items-center gap-4 mb-4">
+                <!-- Mascot Visual Badge -->
+                <div id="mascotIconBox" class="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shadow-lg shrink-0 animate-float">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div>
+                    <span id="commentaryTag" class="text-xs font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md">
+                        CORRECT ANSWER
+                    </span>
+                    <h3 id="commentaryTitle" class="text-lg sm:text-xl font-bold text-white mt-1">
+                        బాగా చేసావు! (Well Done!)
+                    </h3>
+                </div>
+            </div>
+
+            <!-- Telugu Dialogue Box -->
+            <div class="my-5 p-5 rounded-2xl bg-slate-900/90 border border-slate-700/60 relative overflow-hidden">
+                <i class="fa-solid fa-quote-left text-3xl text-indigo-500/20 absolute top-3 left-3"></i>
+                <p id="commentaryTeluguText" class="telugu-text text-xl sm:text-2xl font-bold leading-relaxed text-amber-300 relative z-10 text-center my-2">
+                    "అబ్బా! నువ్వు నడిచే వికీపీడియావి రా సామి!"
+                </p>
+                <i class="fa-solid fa-quote-right text-3xl text-indigo-500/20 absolute bottom-3 right-3"></i>
+            </div>
+
+            <!-- Correct Answer Details (if wrong) -->
+            <div id="answerFeedbackDetail" class="mb-5 text-xs text-slate-300 bg-slate-950/60 p-3 rounded-xl border border-slate-800">
+            </div>
+
+            <!-- Modal Action Footer -->
+            <div class="flex items-center justify-between gap-3 pt-2">
+                <button onclick="speakDialogue()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-indigo-300 text-xs font-bold flex items-center gap-2 border border-indigo-500/30 transition">
+                    <i class="fa-solid fa-volume-high"></i>
+                    <span>Read Dialogue</span>
+                </button>
+                
+                <button onclick="closeCommentaryModal()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-indigo-600 hover:from-amber-400 hover:to-indigo-500 text-slate-950 font-black text-xs uppercase tracking-wider transition transform active:scale-95 shadow-lg">
+                    Continue <i class="fa-solid fa-circle-chevron-right ml-1"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="dialoguesListModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md hidden">
+        <div class="w-full max-w-4xl h-[85vh] glass-card rounded-3xl p-6 sm:p-8 flex flex-col border border-slate-700 shadow-2xl relative">
+            
+            <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-purple-600/30 border border-purple-500/40 flex items-center justify-center text-purple-300">
+                        <i class="fa-solid fa-face-laugh-squint text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Quiz Punch Dialogues Collection</h3>
+                        <p class="text-xs text-slate-400 telugu-text">మొత్తం 50 కామెడీ కామెంట్లు (25 Right & 25 Wrong)</p>
+                    </div>
+                </div>
+                <button onclick="closeDialoguesModal()" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Tab Switcher -->
+            <div class="flex gap-2 mb-4">
+                <button id="tabRightBtn" onclick="switchDialogueTab('right')" class="flex-1 py-2 rounded-xl font-bold text-xs sm:text-sm bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 transition">
+                    <i class="fa-solid fa-circle-check mr-1.5"></i> Right Answer Comments (25)
+                </button>
+                <button id="tabWrongBtn" onclick="switchDialogueTab('wrong')" class="flex-1 py-2 rounded-xl font-bold text-xs sm:text-sm bg-slate-800 text-slate-400 border border-slate-700 transition">
+                    <i class="fa-solid fa-circle-xmark mr-1.5"></i> Wrong Answer Comments (25)
+                </button>
+            </div>
+
+            <!-- Scrollable Dialogue List -->
+            <div id="dialoguesContainer" class="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-3">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 25 COMMENTS FOR RIGHT ANSWERS ---
+        const rightAnswerComments = [
+            "అబ్బా! నువ్వు నడిచే వికీపీడియావి రా సామి!",
+            "సూపర్బ్! క్వశ్చన్ కి మైండ్ బ్లాక్ ఆన్సర్ ఇచ్చావ్!",
+            "గూగుల్ కంటే స్పీడ్ గా ఉన్నావ్ గా!",
+            "ఈ సిక్సర్ కి గట్టిగా క్లాప్స్ పడాల్సిందే!",
+            "నీ నాలెడ్జ్ కి ఒక దండం గురూ!",
+            "ఆన్సర్ అదిరింది, నువ్వు రియల్ జెమ్ వి!",
+            "నీ బుర్రలో వికీపీడియా ఏమైనా దాచావా ఏంటి?",
+            "ఆన్సర్ చెప్పిన స్పీడ్ చూస్తే గూగుల్ కి లీవ్ ఇచ్చేలా ఉన్నావ్!",
+            "క్వశ్చన్ పూర్తి కాకముందే ఆన్సర్! నువ్వు తోపు సామి!",
+            "నీ నాలెడ్జ్ కి క్లాస్ అంతా లేచి నిలబడి చప్పట్లు కొట్టాలి!",
+            "అది రా అటాక్ అంటే! క్లాస్ లో నువ్వే హీరో!",
+            "ఏం చదివావురా బాబు, ఆన్సర్ చింపేశావ్!",
+            "నీ టైమింగ్ కి, నీ నాలెడ్జ్ కి హాట్సాఫ్!",
+            "ఈ ఆన్సర్ తో క్వశ్చన్ పేపర్ కి ముచ్చెమటలు పట్టించావ్!",
+            "బుర్రంటే నీదే తమ్ముడూ, మిగతావన్నీ మోకాళ్లే!",
+            "రైట్ ఆన్సర్! నీ రూటే సెపరేటు గురూ!",
+            "నెక్స్ట్ క్వశ్చన్ అడగడానికి మాకే భయం వేస్తోంది నీ స్పీడ్ చూసి!",
+            "కరెక్ట్ ఆన్సర్! ఈరోజు లక్ నీ వైపు ఉన్నట్టుంది!",
+            "బుల్లెట్ దిగిందా లేదా? ఆన్సర్ పర్ఫెక్ట్!",
+            "నువ్వు స్టూడెంట్ వి కావు, నెక్స్ట్ లెవెల్ మేధావివి!",
+            "ఆన్సర్ విన్నాక మైండ్ బ్లాంక్ అయిపోయింది! సూపర్!",
+            "పక్కా ఆన్సర్! నీ కాన్ఫిడెన్స్ కి వంద మార్కులు!",
+            "క్వశ్చన్ వేయడమే ఆలస్యం, ఆన్సర్ రెడీగా ఉంది నీ దగ్గర!",
+            "క్లాప్స్ కొట్టండి బాబోయ్, ఇంత మంచి ఆన్సర్ కి!",
+            "ఈ క్విజ్ కి నువ్వే రియల్ బాస్ వి అని ప్రూవ్ చేశావ్!"
+        ];
+
+        // --- 25 COMMENTS FOR WRONG ANSWERS ---
+        const wrongAnswerComments = [
+            "ఆన్సర్ తప్పు కానీ, నీ బిల్డప్ కి వంద మార్కులు!",
+            "పర్లేదు, తప్పు చెప్పడంలో కూడా నువ్వే తోపు!",
+            "ఈ ఆన్సర్ వింటే సైంటిస్టులు షాక్ అవుతారు!",
+            "నువ్వు చెప్పిన కాన్ఫిడెన్స్ కి క్వశ్చన్ ఏ తప్పు అనిపించింది!",
+            "నో ప్రాబ్లమ్, నెక్స్ట్ క్వశ్చన్ కి గట్టిగా ట్రై చెయ్!",
+            "రైట్ ఆన్సర్ కి చాలా దగ్గరగా వచ్చి యూ-టర్న్ తీసుకున్నావ్!",
+            "ఆన్సర్ అయితే తప్పు కానీ, నీ కాన్ఫిడెంట్ లుక్ అదిరింది!",
+            "కనీసం తప్పు చెప్పడంలో అయినా ఫస్ట్ వచ్చావు, ఆ శాటిస్ఫాక్షన్ చాలు!",
+            "ఈ ఆన్సర్ విన్నాక సైంటిస్టులు తమ డిగ్రీలు వెనక్కి ఇచ్చేస్తారంట!",
+            "పర్లేదులే తమ్ముడూ, లోపల సర్వర్ కాస్త డౌన్ అయినట్టుంది!",
+            "ఆన్సర్ తప్పు కానీ, నువ్వు ఇచ్చిన ట్విస్ట్ కి థ్రిల్ అయ్యాం!",
+            "బుర్రను అంతలా వాడేయకు, ఎగ్జామ్స్ కి కూడా కాస్త దాచి పెట్టు!",
+            "క్వశ్చన్ ఒకటి అయితే, నువ్వు చెప్పిన రూట్ ఇంకొకటి!",
+            "పర్లేదు, తదుపరి ప్రశ్న మీ కోసం వేచి చూస్తోంది!",
+            "ఈ ఆన్సర్ తో హిస్టరీ ని కాస్త మార్చేశావ్ గా!",
+            "నో ప్రాబ్లమ్! తప్పుల నుంచే కదా కొత్త విషయాలు నేర్చుకునేది!",
+            "ఆన్సర్ రాకపోయినా మేనేజ్ చేసావ్ చూడు, అక్కడ మెచ్చుకోవాలి!",
+            "నీ మైండ్ లో గూగుల్ లోడింగ్ స్లో గా ఉన్నట్టుంది!",
+            "రూట్ కరెక్టే కానీ, డెస్టినేషన్ తప్పు పడ్డావ్ బ్రదర్!",
+            "ఈ ఒక్క క్వశ్చన్ కి అవుట్ అయ్యావ్, నెక్స్ట్ క్వశ్చన్ కి సిక్సర్ కొట్టు!",
+            "ఆన్సర్ రానప్పుడు సైలెంట్ గా నవ్వేయడమే బెస్ట్ పాలసీ!",
+            "పర్లేదు, కనీసం మైక్ పట్టుకుని చెప్పే ధైర్యం చేసావ్!",
+            "ఆన్సర్ తప్పు తమ్ముడూ, కానీ నీ ట్రై కి ఒక సెల్యూట్!",
+            "కొంపలేం మునిగిపోలేదు, నెక్స్ట్ క్వశ్చన్ కి రెడీ అయిపో!",
+            "క్వశ్చన్ పేపర్ తయారుచేసిన నన్నే కన్ఫ్యూజ్ చేసావ్ కదరా!"
+        ];
+
+        const quizQuestions = [
+            { category: "C Basics", question: "Which function is the starting point of a standard C program?", snippet: "int ___(void) { return 0; }", correctAnswers: ["main"], options: ["start", "main", "begin", "program"], explanation: "Execution begins in main()." },
+            { category: "C Basics", question: "Which header declares printf() and scanf()?", snippet: "#include <___>", correctAnswers: ["stdio.h"], options: ["stdio.h", "stdlib.h", "string.h", "math.h"], explanation: "Standard input and output functions are declared in stdio.h." },
+            { category: "C Basics", question: "Which character ends a C statement?", snippet: "int count = 5___", correctAnswers: [";", "semicolon"], options: [";", ":", ".", ","], explanation: "Most C statements end with a semicolon." },
+            { category: "C Basics", question: "Which type stores a whole number?", snippet: "___ age = 20;", correctAnswers: ["int"], options: ["int", "char", "void", "float"], explanation: "int is a basic integer type in C." },
+            { category: "C Basics", question: "Which type stores a single character?", snippet: "___ grade = 'A';", correctAnswers: ["char"], options: ["char", "string", "text", "character"], explanation: "char stores a single character value." },
+            { category: "C Basics", question: "Which type is commonly used for decimal numbers?", snippet: "___ temperature = 36.5f;", correctAnswers: ["float"], options: ["float", "int", "char", "void"], explanation: "float represents a floating-point value." },
+            { category: "C Basics", question: "Which keyword makes a variable read-only through its name?", snippet: "___ int limit = 100;", correctAnswers: ["const"], options: ["const", "fixed", "final", "static"], explanation: "const prevents modification through that identifier." },
+            { category: "C Basics", question: "Which format specifier prints an int with printf()?", snippet: "printf(\"%___\", number);", correctAnswers: ["d", "i", "%d", "%i"], options: ["d", "f", "c", "s"], explanation: "%d and %i format int values in printf." },
+            { category: "C Basics", question: "Which format specifier reads an int with scanf()?", snippet: "scanf(\"%___\", &number);", correctAnswers: ["d", "i", "%d", "%i"], options: ["d", "f", "c", "s"], explanation: "%d or %i reads an integer with scanf." },
+            { category: "C Basics", question: "Which format specifier prints a float with printf()?", snippet: "printf(\"%___\", value);", correctAnswers: ["f", "%f"], options: ["f", "d", "c", "s"], explanation: "%f formats a floating-point value in printf." },
+            { category: "C Basics", question: "Which operator gets a variable's address for scanf()?", snippet: "scanf(\"%d\", ___number);", correctAnswers: ["&"], options: ["&", "*", "%", "#"], explanation: "& is the address-of operator." },
+            { category: "C Basics", question: "Which operator assigns a value to a variable?", snippet: "int total ___ 0;", correctAnswers: ["="], options: ["=", "==", ":=", "->"], explanation: "A single equals sign performs assignment." },
+            { category: "C Basics", question: "Which operator tests whether two values are equal?", snippet: "if (a ___ b)", correctAnswers: ["=="], options: ["==", "=", "!=", ">="], explanation: "== compares values for equality." },
+            { category: "C Basics", question: "Which operator means logical AND?", snippet: "if (ready ___ valid)", correctAnswers: ["&&"], options: ["&&", "||", "&", "!"], explanation: "&& is the logical AND operator." },
+            { category: "C Basics", question: "Which operator means logical OR?", snippet: "if (left ___ right)", correctAnswers: ["||"], options: ["||", "&&", "|", "!"], explanation: "|| is the logical OR operator." },
+            { category: "C Basics", question: "Which operator gives the remainder after integer division?", snippet: "int remainder = 10 ___ 3;", correctAnswers: ["%"], options: ["%", "/", "*", "//"], explanation: "% gives the integer remainder." },
+            { category: "C Basics", question: "Which keyword begins a conditional statement?", snippet: "___ (score >= 50) { pass = 1; }", correctAnswers: ["if"], options: ["if", "when", "check", "case"], explanation: "if runs a block when its condition is true." },
+            { category: "C Basics", question: "Which keyword provides an alternative branch after if?", snippet: "if (x > 0) { } ___ { }", correctAnswers: ["else"], options: ["else", "otherwise", "elif", "default"], explanation: "else handles the alternative when if is false." },
+            { category: "C Basics", question: "Which keyword selects among cases based on an expression?", snippet: "___ (choice) { case 1: break; }", correctAnswers: ["switch"], options: ["switch", "select", "ifcase", "choose"], explanation: "switch branches to a matching case label." },
+            { category: "C Basics", question: "Which keyword exits a loop immediately?", snippet: "while (1) { if (done) ___; }", correctAnswers: ["break"], options: ["break", "stop", "exit", "continue"], explanation: "break exits the nearest loop or switch." },
+            { category: "C Basics", question: "Which keyword skips to the next loop iteration?", snippet: "if (skip) ___;", correctAnswers: ["continue"], options: ["continue", "break", "next", "pass"], explanation: "continue skips the rest of the current iteration." },
+            { category: "C Basics", question: "Which loop checks its condition before each iteration?", snippet: "___ (count < 5) { count++; }", correctAnswers: ["while"], options: ["while", "do", "repeat", "until"], explanation: "while checks its condition before running the body." },
+            { category: "C Basics", question: "Which loop header groups initialization, condition, and update?", snippet: "___ (int i = 0; i < 5; i++) { }", correctAnswers: ["for"], options: ["for", "while", "switch", "if"], explanation: "A for loop groups its three control expressions." },
+            { category: "C Basics", question: "Which loop always runs its body at least once?", snippet: "___ { count++; } while (count < 3);", correctAnswers: ["do"], options: ["do", "for", "while", "if"], explanation: "do-while checks its condition after the body." },
+            { category: "C Basics", question: "What is the index of the first element in a C array?", snippet: "int values[3]; values[___] = 10;", correctAnswers: ["0"], options: ["0", "1", "-1", "3"], explanation: "C arrays use zero-based indexing." },
+            { category: "C Basics", question: "What is the last valid index of an array with 5 elements?", snippet: "int values[5]; // last index: ___", correctAnswers: ["4"], options: ["4", "5", "3", "6"], explanation: "An array of length N has indices 0 through N-1." },
+            { category: "C Basics", question: "Which keyword returns a value from a function?", snippet: "int square(int n) { ___ n * n; }", correctAnswers: ["return"], options: ["return", "give", "break", "yield"], explanation: "return ends a function and supplies its result." },
+            { category: "C Basics", question: "Which return type indicates that a function returns no value?", snippet: "___ showMessage(void) { puts(\"Hi\"); }", correctAnswers: ["void"], options: ["void", "null", "empty", "none"], explanation: "void as a return type means no return value." },
+            { category: "C Basics", question: "What is a function prototype?", snippet: "int add(int, int); // function ___", correctAnswers: ["prototype", "declaration"], options: ["prototype", "loop", "expression", "comment"], explanation: "A prototype declares a function's name, return type, and parameters." },
+            { category: "C Basics", question: "Which keyword defines a structure type?", snippet: "___ Point { int x; int y; };", correctAnswers: ["struct"], options: ["struct", "class", "record", "object"], explanation: "struct groups related members into one C type." },
+            { category: "C Basics", question: "Which keyword defines an enumeration?", snippet: "___ Day { MON, TUE };", correctAnswers: ["enum"], options: ["enum", "define", "struct", "case"], explanation: "enum defines named integer constants." },
+            { category: "C Basics", question: "What is the null character written as in a C string?", snippet: "char end = '___';", correctAnswers: ["\\0"], options: ["\\0", "\\n", "NULL", "0\\n"], explanation: "C strings end with the null character, written \\0." },
+            { category: "C Basics", question: "Which header declares common string functions such as strlen()?", snippet: "#include <___>", correctAnswers: ["string.h"], options: ["string.h", "stdio.h", "strings", "stdlib.h"], explanation: "string.h declares standard string functions." },
+            { category: "C Basics", question: "Which function returns a C string's length, excluding its null terminator?", snippet: "size_t n = ___(text);", correctAnswers: ["strlen"], options: ["strlen", "sizeof", "strsize", "length"], explanation: "strlen counts characters before the terminating null character." },
+            { category: "C Basics", question: "Which function compares two C strings?", snippet: "if (___(first, second) == 0) { }", correctAnswers: ["strcmp"], options: ["strcmp", "strcpy", "strlen", "strcat"], explanation: "strcmp compares two null-terminated strings." },
+            { category: "C Basics", question: "Which symbol declares a pointer to int?", snippet: "int ___ptr;", correctAnswers: ["*"], options: ["*", "&", "->", "%"], explanation: "The * in a declaration indicates a pointer type." },
+            { category: "C Basics", question: "Which operator accesses the value pointed to by ptr?", snippet: "int value = ___ptr;", correctAnswers: ["*"], options: ["*", "&", "->", "."], explanation: "Unary * dereferences a pointer." },
+            { category: "C Basics", question: "Which operator accesses a structure member through a pointer?", snippet: "studentPtr___age", correctAnswers: ["->"], options: ["->", ".", "*", "&"], explanation: "-> accesses a member through a structure pointer." },
+            { category: "C Basics", question: "What value represents a pointer that points to no object?", snippet: "int *ptr = ___;", correctAnswers: ["NULL", "0"], options: ["NULL", "VOID", "EMPTY", "EOF"], explanation: "A null pointer is commonly initialized with NULL." },
+            { category: "C Basics", question: "Which header declares malloc() and free()?", snippet: "#include <___>", correctAnswers: ["stdlib.h"], options: ["stdlib.h", "stdio.h", "string.h", "memory.h"], explanation: "Standard allocation functions are declared in stdlib.h." },
+            { category: "C Basics", question: "Which function allocates a block of dynamic memory?", snippet: "int *p = malloc(5 * sizeof(int)); // ___", correctAnswers: ["malloc"], options: ["malloc", "create", "alloc", "new"], explanation: "malloc allocates a requested number of bytes." },
+            { category: "C Basics", question: "Which function releases dynamically allocated memory?", snippet: "___(ptr);", correctAnswers: ["free"], options: ["free", "delete", "remove", "clear"], explanation: "free releases dynamically allocated memory." },
+            { category: "C Basics", question: "Which preprocessor directive includes a header file?", snippet: "___ <stdio.h>", correctAnswers: ["#include"], options: ["#include", "import", "using", "package"], explanation: "#include tells the preprocessor to include a header." },
+            { category: "C Basics", question: "Which symbols begin a single-line comment in C?", snippet: "___ This is a comment", correctAnswers: ["//"], options: ["//", "#", "--", "\\"], explanation: "Two forward slashes begin a single-line comment." },
+            { category: "C Basics", question: "Which pair of symbols encloses a block of C code?", snippet: "int main(void) ___ return 0; ___", correctAnswers: ["{}", "{ }"], options: ["{}", "[]", "()", "<>"], explanation: "Curly braces delimit compound statements and function bodies." },
+            { category: "C Basics", question: "Which escape sequence starts a new line in a string?", snippet: "printf(\"Hello___World\");", correctAnswers: ["\\n"], options: ["\\n", "\\t", "\\0", "\\r"], explanation: "\\n is the newline escape sequence." },
+            { category: "C Basics", question: "What unit does sizeof report?", snippet: "sizeof(int) gives the size in ___", correctAnswers: ["bytes", "byte"], options: ["bytes", "bits", "characters", "digits"], explanation: "sizeof reports size in bytes." },
+            { category: "C Basics", question: "Which operator increments a variable by one?", snippet: "count___;", correctAnswers: ["++"], options: ["++", "+", "+=", "**"], explanation: "++ increments its operand by one." },
+            { category: "C Basics", question: "Which symbol begins the conditional (ternary) operator?", snippet: "max = (a > b) ___ a : b;", correctAnswers: ["?"], options: ["?", ":", "??", "if"], explanation: "The conditional operator has the form condition ? value1 : value2." },
+            { category: "C Basics", question: "Which keyword ends a switch case to prevent fall-through?", snippet: "case 1: action(); ___;", correctAnswers: ["break"], options: ["break", "stop", "returncase", "exit"], explanation: "break exits the switch after the selected case." }
+        ];
+        let currentQuestionIdx = 0;
+        let score = 0;
+        let userAnswers = new Array(quizQuestions.length).fill("");
+        let reduceMotion = false;
+        let activeDialogue = "";
+
+        window.onload = function() {
+            // Zigzag/shuffle options for each question so correct answer is unpredictable
+            quizQuestions.forEach(q => {
+                if (q.options && q.options.length > 0) {
+                    for (let i = q.options.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [q.options[i], q.options[j]] = [q.options[j], q.options[i]];
+                    }
+                }
+            });
+            renderQuestion();
+            updateHeaderStats();
+        };
+
+        function renderQuestion() {
+            const q = quizQuestions[currentQuestionIdx];
+            
+            // Updates progress indicators
+            document.getElementById('currentQNum').innerText = currentQuestionIdx + 1;
+            document.getElementById('totalQNum').innerText = quizQuestions.length;
+            document.getElementById('questionCategory').innerText = q.category;
+            document.getElementById('questionText').innerText = q.question;
+
+            // Code snippet display
+            const snippetEl = document.getElementById('codeSnippet');
+            if(q.snippet) {
+                snippetEl.innerText = q.snippet;
+                snippetEl.classList.remove('hidden');
+            } else {
+                snippetEl.classList.add('hidden');
+            }
+
+            // Fill-in-the-blank text field restore
+            const blankInput = document.getElementById('blankInput');
+            blankInput.value = userAnswers[currentQuestionIdx] || "";
+
+            // Render option suggestion chips safely
+            const optionsGrid = document.getElementById('optionsGrid');
+            optionsGrid.innerHTML = "";
+
+            if(q.options && q.options.length > 0) {
+                q.options.forEach((opt) => {
+                    const chip = document.createElement('button');
+                    const isSelected = (userAnswers[currentQuestionIdx].toLowerCase().trim() === opt.toLowerCase().trim());
+                    
+                    chip.className = `option-chip text-left px-4 py-2.5 rounded-xl text-sm font-semibold border transition flex items-center justify-between ${
+                        isSelected 
+                        ? 'bg-indigo-600/30 border-indigo-400 text-indigo-200 shadow-md shadow-indigo-500/20' 
+                        : 'bg-slate-900/60 border-slate-700/80 text-slate-300 hover:bg-slate-800'
+                    }`;
+                    
+                    chip.onclick = () => {
+                        blankInput.value = opt;
+                        onUserInputChange(opt);
+                        renderQuestion();
+                    };
+
+                    chip.innerHTML = `
+                        <span>${opt}</span>
+                        <i class="fa-solid ${isSelected ? 'fa-circle-check text-indigo-400' : 'fa-circle text-slate-700'} option-radio text-xs"></i>
+                    `;
+                    optionsGrid.appendChild(chip);
+                });
+            }
+
+            // Update button states
+            document.getElementById('prevBtn').disabled = (currentQuestionIdx === 0);
+            document.getElementById('nextBtn').innerText = (currentQuestionIdx === quizQuestions.length - 1) ? "Finish Quiz 🎉" : "Next ▶";
+        }
+
+        function onUserInputChange(val) {
+            userAnswers[currentQuestionIdx] = val;
+            updateHeaderStats();
+        }
+
+        function checkSelectedAnswer() {
+            const currentAnswer = (userAnswers[currentQuestionIdx] || "").trim().toLowerCase();
+            
+            if(!currentAnswer) {
+                showToastNotification("దయచేసి సమాధానం టైప్ చేయండి! (Please enter an answer first)");
+                return;
+            }
+
+            const q = quizQuestions[currentQuestionIdx];
+            const isCorrect = q.correctAnswers.some(ans => ans.toLowerCase().trim() === currentAnswer);
+
+            if(isCorrect) {
+                score += 10;
+                updateHeaderStats();
+                triggerConfetti();
+                showTeluguCommentary(true);
+            } else {
+                showTeluguCommentary(false, null, q);
+            }
+        }
+
+        function showTeluguCommentary(isCorrect, customMsg = null, questionObj = null) {
+            const modal = document.getElementById('commentaryModal');
+            const card = document.getElementById('commentaryCard');
+            const mascotBox = document.getElementById('mascotIconBox');
+            const tag = document.getElementById('commentaryTag');
+            const title = document.getElementById('commentaryTitle');
+            const teluguText = document.getElementById('commentaryTeluguText');
+            const detailEl = document.getElementById('answerFeedbackDetail');
+
+            let randomComment = "";
+            if(customMsg) {
+                randomComment = customMsg;
+            } else {
+                const list = isCorrect ? rightAnswerComments : wrongAnswerComments;
+                const randomIdx = Math.floor(Math.random() * list.length);
+                randomComment = list[randomIdx];
+            }
+
+            activeDialogue = randomComment;
+            teluguText.innerText = `"${randomComment}"`;
+
+            if(isCorrect) {
+                card.className = "w-full max-w-lg glass-card rounded-3xl p-6 sm:p-8 border-2 border-emerald-500/60 shadow-2xl shadow-emerald-500/20 relative animate-pop-in";
+                mascotBox.className = "w-16 h-16 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center text-3xl shadow-lg shrink-0 animate-float";
+                mascotBox.innerHTML = '<i class="fa-solid fa-trophy"></i>';
+                tag.className = "text-xs font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+                tag.innerText = "CORRECT ANSWER 🎯";
+                title.innerText = "బాగా చేసావు! (Well Done!)";
+                detailEl.innerHTML = `<span class="text-emerald-400 font-bold"><i class="fa-solid fa-circle-check"></i> Perfect!</span> +10 Points added to your score.`;
+            } else {
+                card.className = "w-full max-w-lg glass-card rounded-3xl p-6 sm:p-8 border-2 border-rose-500/60 shadow-2xl shadow-rose-500/20 relative animate-pop-in";
+                mascotBox.className = "w-16 h-16 rounded-2xl bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center justify-center text-3xl shadow-lg shrink-0 animate-float";
+                mascotBox.innerHTML = '<i class="fa-solid fa-bug"></i>';
+                tag.className = "text-xs font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-rose-500/20 text-rose-400 border border-rose-500/30";
+                tag.innerText = "WRONG ANSWER ❌";
+                title.innerText = "బగ్ పట్టుబడింది! (Bug Caught!)";
+                
+                const correctStr = questionObj ? questionObj.correctAnswers.join(" or ") : "";
+                detailEl.innerHTML = `<span class="text-rose-400 font-bold"><i class="fa-solid fa-circle-xmark"></i> Correct Answer:</span> <code class="text-amber-300 font-mono bg-slate-900 px-2 py-0.5 rounded">${correctStr}</code>`;
+            }
+
+            modal.classList.remove('hidden');
+
+            speakDialogue();
+        }
+
+        function closeCommentaryModal() {
+            document.getElementById('commentaryModal').classList.add('hidden');
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+        }
+
+        function speakDialogue() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(activeDialogue);
+                utterance.lang = 'te-IN';
+                utterance.rate = 0.95;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function nextQuestion() {
+            closeCommentaryModal();
+            if(currentQuestionIdx < quizQuestions.length - 1) {
+                currentQuestionIdx++;
+                renderQuestion();
+            } else {
+                showSummaryScreen();
+            }
+        }
+
+        function prevQuestion() {
+            closeCommentaryModal();
+            if(currentQuestionIdx > 0) {
+                currentQuestionIdx--;
+                renderQuestion();
+            }
+        }
+
+        function updateHeaderStats() {
+            const answeredCount = userAnswers.filter(ans => ans.trim() !== "").length;
+            document.getElementById('scoreDisplay').innerText = score;
+            document.getElementById('answeredDisplay').innerText = `${answeredCount}/${quizQuestions.length}`;
+        }
+
+        function showSummaryScreen() {
+            document.getElementById('quizCard').classList.add('hidden');
+            document.getElementById('quizHeaderBar').classList.add('hidden');
+            
+            const summaryCard = document.getElementById('summaryCard');
+            summaryCard.classList.remove('hidden');
+
+            const totalScore = score;
+            const maxScore = quizQuestions.length * 10;
+            const percentage = Math.round((totalScore / maxScore) * 100);
+            const attemptedCount = userAnswers.filter(a => a.trim() !== "").length;
+
+            document.getElementById('finalScore').innerText = `${totalScore} / ${maxScore}`;
+            document.getElementById('finalPercentage').innerText = `${percentage}%`;
+            document.getElementById('finalAttempted').innerText = `${attemptedCount} / ${quizQuestions.length}`;
+
+            // Build Answer Key List
+            const listContainer = document.getElementById('answerKeyList');
+            listContainer.innerHTML = "";
+
+            quizQuestions.forEach((q, idx) => {
+                const userAns = userAnswers[idx] || "Not Answered";
+                const isRight = q.correctAnswers.some(ans => ans.toLowerCase().trim() === userAns.toLowerCase().trim());
+
+                listContainer.innerHTML += `
+                    <div class="p-4 rounded-xl bg-slate-900/90 border ${isRight ? 'border-emerald-500/40' : 'border-slate-800'} space-y-1">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-xs font-bold text-indigo-400">Q${idx+1}. ${q.category}</span>
+                            <span class="text-xs font-bold px-2 py-0.5 rounded ${isRight ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300'}">
+                                ${isRight ? '✓ Correct (+10)' : '✗ Incorrect'}
+                            </span>
+                        </div>
+                        <p class="text-sm font-semibold text-white">${q.question}</p>
+                        <div class="text-xs space-y-0.5 font-mono pt-1">
+                            <p class="text-slate-400">Your Answer: <span class="${isRight ? 'text-emerald-400' : 'text-rose-400'} font-bold">${userAns}</span></p>
+                            <p class="text-amber-300">Correct Answer: <span class="font-bold">${q.correctAnswers.join(" / ")}</span></p>
+                        </div>
+                        <p class="text-xs text-slate-400 italic pt-1 border-t border-slate-800/80">${q.explanation}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function toggleAnswerKey() {
+            const keyBox = document.getElementById('answerKeyBox');
+            keyBox.classList.toggle('hidden');
+        }
+
+        function resetQuiz() {
+            currentQuestionIdx = 0;
+            score = 0;
+            userAnswers = new Array(quizQuestions.length).fill("");
+            
+            document.getElementById('summaryCard').classList.add('hidden');
+            document.getElementById('answerKeyBox').classList.add('hidden');
+            document.getElementById('quizCard').classList.remove('hidden');
+            document.getElementById('quizHeaderBar').classList.remove('hidden');
+
+            renderQuestion();
+            updateHeaderStats();
+        }
+
+        function openDialoguesModal() {
+            switchDialogueTab('right');
+            document.getElementById('dialoguesListModal').classList.remove('hidden');
+        }
+
+        function closeDialoguesModal() {
+            document.getElementById('dialoguesListModal').classList.add('hidden');
+        }
+
+        function switchDialogueTab(type) {
+            const container = document.getElementById('dialoguesContainer');
+            const rightBtn = document.getElementById('tabRightBtn');
+            const wrongBtn = document.getElementById('tabWrongBtn');
+
+            container.innerHTML = '';
+
+            if(type === 'right') {
+                rightBtn.className = "flex-1 py-2 rounded-xl font-bold text-xs sm:text-sm bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 transition shadow-lg";
+                wrongBtn.className = "flex-1 py-2 rounded-xl font-bold text-xs sm:text-sm bg-slate-900 text-slate-400 border border-slate-800 transition";
+
+                rightAnswerComments.forEach((c, i) => {
+                    const safeComment = c.replace(/'/g, "\\'");
+                    container.innerHTML += `
+                        <div class="p-3.5 rounded-xl bg-slate-900/80 border border-emerald-500/20 flex items-center justify-between gap-3 hover:border-emerald-500/50 transition">
+                            <div class="flex items-center gap-3">
+                                <span class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 text-xs font-bold flex items-center justify-center border border-emerald-500/30">${i+1}</span>
+                                <span class="telugu-text text-sm sm:text-base font-semibold text-amber-200">${c}</span>
+                            </div>
+                            <button onclick="playSingleDialogue('${safeComment}')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-emerald-400 text-xs font-semibold shrink-0">
+                                <i class="fa-solid fa-volume-high"></i>
+                            </button>
+                        </div>
+                    `;
+                });
+            } else {
+                wrongBtn.className = "flex-1 py-2 rounded-xl font-bold text-xs sm:text-sm bg-rose-500/20 text-rose-300 border border-rose-500/40 transition shadow-lg";
+                rightBtn.className = "flex-1 py-2 rounded-xl font-bold text-xs sm:text-sm bg-slate-900 text-slate-400 border border-slate-800 transition";
+
+                wrongAnswerComments.forEach((c, i) => {
+                    const safeComment = c.replace(/'/g, "\\'");
+                    container.innerHTML += `
+                        <div class="p-3.5 rounded-xl bg-slate-900/80 border border-rose-500/20 flex items-center justify-between gap-3 hover:border-rose-500/50 transition">
+                            <div class="flex items-center gap-3">
+                                <span class="w-7 h-7 rounded-lg bg-rose-500/20 text-rose-400 text-xs font-bold flex items-center justify-center border border-rose-500/30">${i+1}</span>
+                                <span class="telugu-text text-sm sm:text-base font-semibold text-rose-200">${c}</span>
+                            </div>
+                            <button onclick="playSingleDialogue('${safeComment}')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-rose-400 text-xs font-semibold shrink-0">
+                                <i class="fa-solid fa-volume-high"></i>
+                            </button>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        function playSingleDialogue(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'te-IN';
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function triggerConfetti() {
+            if (!reduceMotion && typeof confetti === 'function') {
+                confetti({
+                    particleCount: 80,
+                    spread: 60,
+                    origin: { y: 0.6 }
+                });
+            }
+        }
+
+    
+
+        function toggleMotion() {
+            reduceMotion = !reduceMotion;
+            document.body.classList.toggle('reduce-motion', reduceMotion);
+            const icon = document.getElementById('motionIcon');
+            icon.className = reduceMotion ? 'fa-solid fa-person-walking text-slate-500' : 'fa-solid fa-person-running text-amber-400';
+            showToastNotification(reduceMotion ? "Motion animations disabled" : "Motion animations enabled");
+        }
+
+        function showToastNotification(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-5 right-5 z-50 px-4 py-2.5 rounded-xl bg-slate-900 text-amber-300 font-bold text-xs border border-amber-500/40 shadow-xl transition animate-pop-in';
+            toast.innerText = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
+
+    </script>
+</body>
+</html>
