@@ -1,12 +1,1 @@
-﻿# C Basics Quiz
-
-This is a static HTML quiz. It does not need Node.js, Python, or Docker to run.
-
-## Deploy on Render
-
-Create a **Static Site** connected to this repository and the `main` branch. Set:
-
-- Build command: `mkdir -p dist && cp quize.html dist/index.html`
-- Publish directory: `dist`
-
-Leave the start command empty. The root `render.yaml` contains the same static-site settings for Render Blueprint deployments.
+# quize
